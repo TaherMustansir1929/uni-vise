@@ -122,7 +122,7 @@ export const ResultForm = ({
                     Specific
                     {mode === "specific" && (
                       <Badge variant="outline" className="ml-2 text-xs">
-                        New Feature
+                        Beta
                       </Badge>
                     )}
                   </Label>
