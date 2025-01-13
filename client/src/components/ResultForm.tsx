@@ -43,22 +43,32 @@ export const ResultForm = ({
 
     //HANDLE API CALL
     console.log("initial form state: ",form);
-    const response = await fetch('http://localhost:3000/api/uni-form',{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form)
-    });
-
-    const res = await response.json();
-
-    setUniversities(res.data);
-
-    toast({
-      title: "Results calculated!",
-      description: "Scroll down to see your university matches.",
-    });
+    try {
+      const response = await fetch('http://localhost:3000/api/uni-form',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form)
+      });
+  
+      const res = await response.json();
+  
+      setUniversities(res.data);
+  
+      toast({
+        title: "Results calculated!",
+        description: "Scroll down to see your university matches.",
+      });
+      
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error",
+        description: "There was an error calculating your results. Please be patient.",
+        variant: "destructive"
+      });
+    }
 
     setLoading(false);
     onSubmit(false);

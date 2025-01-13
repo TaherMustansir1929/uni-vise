@@ -2,10 +2,22 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { MoveRight } from "lucide-react";
 import { Spotlight } from "./ui/Spotlight";
+import AudioVisualizer from "./AudioVisualizer";
+import { useState, useRef, useEffect } from "react";
 
 export const Hero = () => {
+  const [audio, setaudio] = useState(false);
+
+  const handleAudio = () =>{
+    setaudio((prev)=>!prev);
+  }
+
   return (
     <section className="min-h-[95vh] flex flex-col items-center justify-center px-4 hero-gradient">
+      {/* AUDIO VISUALIZER */}
+      <div className="fixed top-0 right-0 z-30 flex items-center justify-start">
+        <AudioVisualizer playAudio={audio} />
+      </div>
       <Spotlight
         className="-top-52 left-0 md:left-60 md:-top-20"
         fill="rgba(88, 50, 168, 0.5)"
@@ -42,7 +54,8 @@ export const Hero = () => {
                 ?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            <div className=" relative overflow-hidden flex gap-1 hover:gap-3 transition-all duration-0.3 items-center w-full">
+            <div className=" relative overflow-hidden flex gap-1 hover:gap-3 transition-all duration-0.3 items-center w-full"
+            onClick={()=>{handleAudio()}}>
                 Get Started
                 <MoveRight />
             </div>
