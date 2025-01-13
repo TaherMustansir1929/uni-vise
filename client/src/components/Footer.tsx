@@ -13,10 +13,10 @@ export const Footer = () => {
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-semibold mb-4">About</h3>
+            <h3 className="font-semibold mb-4">Fun-fact</h3>
             <p className="text-sm text-muted-foreground">
-              Helping Pakistani students find their perfect educational path
-              through data-driven recommendations and personalized guidance.
+              Did you know that the bars on the top-right
+              corner are actually clickable?!
             </p>
           </div>
 
