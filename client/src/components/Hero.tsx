@@ -43,8 +43,9 @@ export const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="pt-4"
+          className="pt-4 flex flex-col justify-center items-center gap-3"
         >
+        <span className="text-xs text-gray-500">{`<click here to begin your journey/>`}</span>
           <Button
             size="lg"
             className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"

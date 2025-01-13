@@ -7,6 +7,10 @@ import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
 import { Combobox } from "./ui/ComboBox";
 import { Badge } from "./ui/badge";
+import FormApi from "../hooks/FormApi";
+import { categories } from "../data/index";
+import { regions } from "../data/index";
+import { RegionBox } from "./ui/RegionBox";
 
 export const ResultForm = ({
   onSubmit,
@@ -15,23 +19,27 @@ export const ResultForm = ({
   onSubmit: (loading: boolean) => void;
   sendDataToIndex: (value: any[]) => any;
 }) => {
-  const [mode, setMode] = useState<"basic" | "advanced">("basic");
+  const [mode, setMode] = useState<"basic" | "specific">("basic");
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     sscMarks: "",
     hsscMarks: "",
     personalInterest: "",
-    formMode: mode,
+    region: "",
   });
-  
+
   const [universities, setUniversities] = useState([]);
 
   useEffect(() => {
     sendDataToIndex(universities);
   }, [universities]);
 
-  const handlePersonalInterest = (value: string) => {
+  const handleComboBox = (value: string) => {
     setForm({ ...form, personalInterest: value });
+  };
+
+  const handleRegionBox = (value: string) => {
+    setForm({ ...form, region: value });
   };
 
   const { toast } = useToast();
@@ -42,31 +50,32 @@ export const ResultForm = ({
     onSubmit(true);
 
     //HANDLE API CALL
-    console.log("initial form state: ",form);
+    console.log("initial form state: ", form);
     try {
-      const response = await fetch('http://localhost:3000/api/uni-form',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form)
-      });
-  
-      const res = await response.json();
-  
-      setUniversities(res.data);
-  
-      toast({
-        title: "Results calculated!",
-        description: "Scroll down to see your university matches.",
-      });
+      const filteredUniversities = await FormApi(form, mode);
+
+      setUniversities(filteredUniversities);
+
+      if(filteredUniversities.length > 0){
+        toast({
+          title: "Results calculated!",
+          description: "Scroll down to see your university matches.",
+        });
+      } else {
+        toast({
+          title: "Oops!",
+          description: "No university matches.",
+          variant: "destructive",
+        });
+      }
       
     } catch (error) {
       console.log(error);
       toast({
         title: "Error",
-        description: "There was an error calculating your results. Please be patient.",
-        variant: "destructive"
+        description:
+          "There was an error calculating your results. Please be patient.",
+        variant: "destructive",
       });
     }
 
@@ -99,7 +108,7 @@ export const ResultForm = ({
               <RadioGroup
                 defaultValue="basic"
                 onValueChange={(value) =>
-                  setMode(value as "basic" | "advanced")
+                  setMode(value as "basic" | "specific")
                 }
                 className="flex space-x-4"
               >
@@ -108,11 +117,12 @@ export const ResultForm = ({
                   <Label htmlFor="basic">Basic</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="advanced" id="advanced" />
-                  <Label htmlFor="advanced">Advanced
-                    {mode === "advanced" && (
+                  <RadioGroupItem value="specific" id="specific" />
+                  <Label htmlFor="specific">
+                    Specific
+                    {mode === "specific" && (
                       <Badge variant="outline" className="ml-2 text-xs">
-                        Under Developement
+                        New Feature
                       </Badge>
                     )}
                   </Label>
@@ -153,23 +163,23 @@ export const ResultForm = ({
                 />
               </div>
 
-              {/* {mode === "advanced" && (
-                <div>
-                  <Label htmlFor="entranceTest">Entrance Test Score</Label>
-                  <Input
-                    id="entranceTest"
-                    type="number"
-                    placeholder="Enter your entrance test score"
-                    min="0"
-                    max="100"
+              {mode === "specific" && (
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="interests">Your Region</Label>
+                  <RegionBox
+                    sendDataToForm={handleRegionBox}
+                    options={regions}
                   />
                 </div>
-              )} */}
+              )}
 
               {/* PERSONAL INTEREST */}
               <div className="flex flex-col gap-1">
                 <Label htmlFor="interests">Your Personal Interest</Label>
-                <Combobox sendDataToForm={handlePersonalInterest} />
+                <Combobox
+                  sendDataToForm={handleComboBox}
+                  options={categories}
+                />
               </div>
             </div>
 

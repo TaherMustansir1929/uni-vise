@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function Combobox({ sendDataToForm, options }: { sendDataToForm: any, options: any[] }) {
+export function RegionBox({ sendDataToForm, options }: { sendDataToForm: any, options: any[] }) {
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -39,13 +39,13 @@ export function Combobox({ sendDataToForm, options }: { sendDataToForm: any, opt
         >
           {value
             ? options.find((option) => option.value === value)?.label
-            : "Select field..."}
+            : "Select region..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search field..." />
+          <CommandInput placeholder="Search region..." />
           <CommandList>
             <CommandEmpty>No field found.</CommandEmpty>
             <CommandGroup>
